@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الأداء المالي | سالم الفاهمي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #e3f2fd;
+            --accent-blue: #1976d2;
+            --accent-green: #2e7d32;
+            --accent-red: #d32f2f;
+            --text-main: #37474f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-blue), #f1f8e9);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 { color: var(--accent-blue); text-align: center; font-size: 1.6rem; margin-bottom: 10px; }
+        .update-time { text-align: center; color: #777; font-size: 0.8rem; margin-bottom: 20px; }
+
+        /* صندوق ملخص الدخل */
+        .income-summary {
+            background: #f1f8ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--primary-blue);
+        }
+
+        .income-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .total-income { border-top: 1px solid #ccc; padding-top: 5px; font-weight: bold; color: var(--accent-blue); }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        
+        select, input {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
+        }
+
+        button {
+            width: 100%; padding: 15px; background-color: var(--accent-blue); color: white;
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
+        }
+
+        /* مؤشرات الأداء */
+        .kpi-container {
+            margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+        .kpi-box { padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #eee; }
+        .kpi-box span { display: block; font-size: 0.8rem; color: #666; }
+        .kpi-box strong { font-size: 1.1rem; }
+
+        .progress-container { width: 100%; background-color: #eee; border-radius: 10px; margin: 15px 0; height: 10px; }
+        .progress-bar { height: 100%; background-color: var(--accent-green); border-radius: 10px; width: 0%; transition: 0.5s; }
+
+        .history-list { margin-top: 20px; max-height: 150px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 10px; }
+        .history-item { display: flex; justify-content: space-between; padding: 5px; font-size: 0.85rem; border-bottom: 1px dashed #eee; }
+
+        .dept-info { text-align: center; margin-top: 25px; font-weight: bold; color: var(--accent-blue); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-chart-pie"></i> تتبع الأداء المالي الشخصي</h1>
+    <p class="update-time">وقت التحديث المفضل: 11:50 مساءً</p>
+
+    <div class="income-summary">
+        <div class="income-row"><span>الراتب الشهري:</span> <span>20,737.50 ريال</span></div>
+        <div class="income-row"><span>الدعم السكني:</span> <span>1,187.37 ريال</span></div>
+        <div class="income-row total-income"><span>إجمالي الدخل:</span> <span>21,924.87 ريال</span></div>
+    </div>
+
+    <div class="input-group">
+        <label>تصنيف المصروف اليومي</label>
+        <select id="category">
+            <option value="طعام ومواد غذائية">طعام ومواد غذائية</option>
+            <option value="وقود وصيانة">وقود وصيانة</option>
+            <option value="فواتير والتزامات">فواتير والتزامات</option>
+            <option value="تسوق وترفيه">تسوق وترفيه</option>
+            <option value="أخرى">أخرى</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>المبلغ المصروف</label>
+        <input type="number" id="amount" placeholder="0.00">
+    </div>
+
+    <button onclick="addExpense()"><i class="fas fa-check-double"></i> تأكيد وحفظ</button>
+
+    <div class="progress-container">
+        <div id="pBar" class="progress-bar"></div>
+    </div>
+
+    <div class="kpi-container">
+        <div class="kpi-box" style="border-right: 4px solid var(--accent-red);">
+            <span>إجمالي المصروفات</span>
+            <strong id="totalExp" style="color: var(--accent-red);">0 ريال</strong>
+        </div>
+        <div class="kpi-box" style="border-right: 4px solid var(--accent-green);">
+            <span>المتبقي من الدخل</span>
+            <strong id="remaining" style="color: var(--accent-green);">0 ريال</strong>
+        </div>
+    </div>
+
+    <div class="history-list" id="history"></div>
+
+    <div class="dept-info">إعداد / قسم قياس الأداء المؤسسي</div>
+    <footer style="text-align: center; font-size: 0.7rem; color: #999; margin-top: 10px;">حقوق التصميم محفوظة © 2026</footer>
+</div>
+
+<script>
+    const TOTAL_INCOME = 21924.87;
+
+    window.onload = displayDashboard;
+
+    function addExpense() {
+        const cat = document.getElementById('category').value;
+        const amt = parseFloat(document.getElementById('amount').value);
+        if (!amt) return;
+
+        let data = JSON.parse(localStorage.getItem('salim_finances')) || [];
+        data.push({ cat, amt, date: new Date().toLocaleDateString('ar-SA') });
+        localStorage.setItem('salim_finances', JSON.stringify(data));
+
+        document.getElementById('amount').value = "";
+        displayDashboard();
+    }
+
+    function displayDashboard() {
+        let data = JSON.parse(localStorage.getItem('salim_finances')) || [];
+        const hist = document.getElementById('history');
+        let total = 0;
+        
+        hist.innerHTML = "";
+        data.slice().reverse().forEach(x => {
+            total += x.amt;
+            hist.innerHTML += `<div class="history-item"><span>${x.cat}</span><strong>${x.amt}</strong></div>`;
+        });
+
+        const remain = TOTAL_INCOME - total;
+        const percent = (total / TOTAL_INCOME) * 100;
+
+        document.getElementById('totalExp').innerText = total.toFixed(2) + " ريال";
+        document.getElementById('remaining').innerText = remain.toFixed(2) + " ريال";
+        document.getElementById('pBar').style.width = Math.min(percent, 100) + "%";
+        
+        // تغيير لون الشريط إذا تجاوز الاستهلاك 80%
+        document.getElementById('pBar').style.backgroundColor = percent > 80 ? "var(--accent-red)" : "var(--accent-green)";
+    }
+</script>
+</body>
+</html>

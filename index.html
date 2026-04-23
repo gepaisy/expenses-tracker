@@ -11,7 +11,6 @@
             --brand-color: #69cee3;
             --title-main: #351375;
             --text-normal: #15445a;
-            --text-dept: #218caa;
             --accent-red: #d32f2f;
             --accent-green: #2e7d32;
         }
@@ -35,7 +34,7 @@
             max-width: 650px;
         }
 
-        h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
+        h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; margin-bottom: 25px; }
 
         .income-summary {
             background: #f1f8ff;
@@ -43,6 +42,7 @@
             border-radius: 10px;
             margin-bottom: 20px;
             border: 1px solid var(--brand-color);
+            text-align: center;
         }
 
         .section-card {
@@ -104,18 +104,18 @@
             border-bottom: 1px dashed #ccc; font-size: 0.85rem; background: #fff;
         }
 
-        .dept-info { text-align: center; margin-top: 20px; font-weight: bold; color: var(--text-dept); font-size: 0.8rem; line-height: 1.6; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: #666; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1><i class="fas fa-chart-pie"></i> لوحة قياس الأداء المالي</h1>
+    <h1><i class="fas fa-wallet"></i> لوحة قياس الأداء المالي</h1>
 
     <div class="income-summary">
-        <div style="display:flex; justify-content:space-between; font-size: 0.9rem;">
-            <span>إجمالي الدخل الشهري الثابت:</span>
-            <strong>21,924.50 ريال</strong>
+        <div style="display:flex; justify-content:space-between; font-weight: bold;">
+            <span>إجمالي الدخل الشهري:</span>
+            <span>21,924.50 ريال</span>
         </div>
     </div>
 
@@ -127,8 +127,8 @@
         
         <div class="category-buttons">
             <div class="cat-btn active" onclick="updateFixedSubCats('current')">القروض الحالية</div>
-            <div class="cat-btn" onclick="updateFixedSubCats('new')">القروض الجديدة</div>
-            <div class="cat-btn" onclick="updateFixedSubCats('other')">التزامات أخرى</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('upcoming')">قروض مستهدفة</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('others')">التزامات أخرى</div>
         </div>
 
         <div class="input-group">
@@ -145,8 +145,8 @@
         
         <div class="category-buttons">
             <div class="cat-btn active" onclick="updateVarSubCats('food')">الأكل والشرب</div>
-            <div class="cat-btn" onclick="updateVarSubCats('home')">مصاريف البيت</div>
-            <div class="cat-btn" onclick="updateVarSubCats('kids')">مصاريف الأبناء</div>
+            <div class="cat-btn" onclick="updateVarSubCats('home')">البيت</div>
+            <div class="cat-btn" onclick="updateVarSubCats('kids')">الأبناء</div>
             <div class="cat-btn" onclick="updateVarSubCats('cars')">السيارات</div>
             <div class="cat-btn" onclick="updateVarSubCats('wife')">الزوجة</div>
             <div class="cat-btn" onclick="updateVarSubCats('personal')">شخصية</div>
@@ -168,39 +168,43 @@
 
     <div class="history-list" id="log"></div>
 
-    <div class="dept-info">
-    </div>
+    <footer>حقوق التصميم محفوظة © 2026</footer>
 </div>
 
 <script>
     const INCOME = 21924.50;
     
+    // بيانات المصاريف الثابتة مستخرجة بالكامل من الملف المرفق
     const fixedData = {
         current: [
             { name: "قرض الراجحي 1", amt: 6148 },
             { name: "قرض الراجحي 2", amt: 4562 },
             { name: "قرض الراجحي 3", amt: 54 },
-            { name: "قرض الراجحي 4", amt: 39 }
+            { name: "قرض الراجحي 4", amt: 39 },
+            { name: "إمكان 1", amt: 149.84 },
+            { name: "إمكان 2", amt: 378.55 }
         ],
-        new: [
+        upcoming: [
             { name: "قرض الراجحي الجديد 1", amt: 8768 },
             { name: "قرض الراجحي الجديد 2", amt: 405 },
-            { name: "قرض الراجحي الجديد 3", amt: 1487 }
+            { name: "قرض الراجحي الجديد 3", amt: 1487 },
+            { name: "قرض إضافي (مستقبلي)", amt: 953 }
         ],
-        other: [
-            { name: "قرض إضافي", amt: 1300 },
-            { name: "دعم العائلة", amt: 1000 },
-            { name: "فواتير كهرباء/ماء", amt: 600 }
+        others: [
+            { name: "فواتير كهرباء", amt: 400 },
+            { name: "فاتورة مياه", amt: 150 },
+            { name: "إنترنت منزلي", amt: 250 },
+            { name: "أخرى", amt: 0 }
         ]
     };
 
     const varData = {
-        food: ["مطاعم", "سوبر ماركت", "كافيهات", "مياه"],
-        home: ["أدوات منزلية", "صيانة", "منظفات", "أخرى"],
-        kids: ["مستلزمات دراسة", "ألعاب", "ملابس أطفال", "نثريات"],
+        food: ["مطاعم", "سوبر ماركت", "حلويات/كافيهات", "مياه"],
+        home: ["أدوات منزلية", "صيانة وأعطال", "منظفات"],
+        kids: ["مستلزمات مدرسة", "ألعاب", "ملابس", "نثريات"],
         cars: ["وقود اكورد", "وقود اكسنت", "وقود اكسبيديشن", "صيانة/غسيل"],
-        wife: ["مستلزمات خاصة", "هدايا", "مصروف دوري"],
-        personal: ["اتصالات/نت", "حلاقة", "ملابس", "صدقات"]
+        wife: ["مستلزمات", "هدايا", "مصروف"],
+        personal: ["جوالات/نت", "حلاقة/عناية", "صدقات"]
     };
 
     window.onload = () => {
@@ -253,20 +257,20 @@
     function saveVariable() {
         const cat = document.getElementById('varSubCategory').value;
         const amt = parseFloat(document.getElementById('varAmount').value);
-        if (!amt) { alert("يرجى إدخال المبلغ"); return; }
+        if (!amt) return;
         processStorage(cat, amt, 'متغير');
         document.getElementById('varAmount').value = "";
     }
 
     function processStorage(cat, amt, type) {
-        let records = JSON.parse(localStorage.getItem('salim_pro_v3')) || [];
-        records.push({ cat, amt, type, timestamp: new Date().toLocaleTimeString('ar-SA') });
-        localStorage.setItem('salim_pro_v3', JSON.stringify(records));
+        let records = JSON.parse(localStorage.getItem('salim_final_v1')) || [];
+        records.push({ cat, amt, type, time: new Date().toLocaleTimeString('ar-SA') });
+        localStorage.setItem('salim_final_v1', JSON.stringify(records));
         refreshUI();
     }
 
     function refreshUI() {
-        const records = JSON.parse(localStorage.getItem('salim_pro_v3')) || [];
+        const records = JSON.parse(localStorage.getItem('salim_final_v1')) || [];
         const logDiv = document.getElementById('log');
         let total = 0;
 

@@ -115,7 +115,7 @@
     <div class="income-summary">
         <div style="display:flex; justify-content:space-between; font-weight: bold;">
             <span>إجمالي الدخل الشهري:</span>
-            <span>21,924.50 ريال</span>
+            <span>21,924.87 ريال</span>
         </div>
     </div>
 
@@ -126,9 +126,9 @@
         </h2>
         
         <div class="category-buttons">
-            <div class="cat-btn active" onclick="updateFixedSubCats('current')">القروض الحالية</div>
-            <div class="cat-btn" onclick="updateFixedSubCats('upcoming')">قروض مستهدفة</div>
-            <div class="cat-btn" onclick="updateFixedSubCats('others')">التزامات أخرى</div>
+            <div class="cat-btn active" onclick="updateFixedSubCats('loans')">القروض والتمويل</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('bills')">الفواتير والاشتراكات</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('regular')">مصاريف دورية</div>
         </div>
 
         <div class="input-group">
@@ -172,29 +172,38 @@
 </div>
 
 <script>
-    const INCOME = 21924.50;
+    const INCOME = 21924.87;
     
-    // بيانات المصاريف الثابتة مستخرجة بالكامل من الملف المرفق
     const fixedData = {
-        current: [
-            { name: "قرض الراجحي 1", amt: 6148 },
-            { name: "قرض الراجحي 2", amt: 4562 },
-            { name: "قرض الراجحي 3", amt: 54 },
-            { name: "قرض الراجحي 4", amt: 39 },
-            { name: "إمكان 1", amt: 149.84 },
-            { name: "إمكان 2", amt: 378.55 }
+        loans: [
+            { name: "قروض الراجحي 1", amt: 6148 },
+            { name: "قروض الراجحي 2", amt: 4562 },
+            { name: "قروض الراجحي 3", amt: 54 },
+            { name: "قروض الراجحي 4", amt: 39 },
+            { name: "قروض الراجحي الجديد 1", amt: 8768 },
+            { name: "قروض الراجحي الجديدة 2", amt: 405 },
+            { name: "قروض الراجحي جديد 3", amt: 1487 },
+            { name: "القرض الاضافي", amt: 953 },
+            { name: "قروض امكان 1", amt: 149.84 },
+            { name: "قروض امكان 2", amt: 378.55 },
+            { name: "تقسيط سيارة", amt: 945 },
+            { name: "اقساط PC الاولاد", amt: 345 }
         ],
-        upcoming: [
-            { name: "قرض الراجحي الجديد 1", amt: 8768 },
-            { name: "قرض الراجحي الجديد 2", amt: 405 },
-            { name: "قرض الراجحي الجديد 3", amt: 1487 },
-            { name: "قرض إضافي (مستقبلي)", amt: 953 }
+        bills: [
+            { name: "فاتورة الانترنت", amt: 402 },
+            { name: "فاتورة جوال ابو محمد", amt: 517 },
+            { name: "فاتورة جوال أم محمد", amt: 46 },
+            { name: "فاتورة الكهرباء", amt: 652 },
+            { name: "فاتورة المياه", amt: 132 },
+            { name: "اشتراك أمازون برايم", amt: 16 },
+            { name: "اشتراك ديزني بلس", amt: 35 },
+            { name: "اشتراك بين سبورت", amt: 90 },
+            { name: "اشتراك يوتيوب", amt: 24 },
+            { name: "اشتراك شاهد", amt: 69 }
         ],
-        others: [
-            { name: "فواتير كهرباء", amt: 400 },
-            { name: "فاتورة مياه", amt: 150 },
-            { name: "إنترنت منزلي", amt: 250 },
-            { name: "أخرى", amt: 0 }
+        regular: [
+            { name: "راتب العامل", amt: 200 },
+            { name: "مصروف أم محمد الشهري", amt: 1400 }
         ]
     };
 
@@ -203,12 +212,12 @@
         home: ["أدوات منزلية", "صيانة وأعطال", "منظفات"],
         kids: ["مستلزمات مدرسة", "ألعاب", "ملابس", "نثريات"],
         cars: ["وقود اكورد", "وقود اكسنت", "وقود اكسبيديشن", "صيانة/غسيل"],
-        wife: ["مستلزمات", "هدايا", "مصروف"],
-        personal: ["جوالات/نت", "حلاقة/عناية", "صدقات"]
+        wife: ["مستلزمات", "هدايا"],
+        personal: ["جوالات/نت إضافي", "حلاقة/عناية", "صدقات"]
     };
 
     window.onload = () => {
-        updateFixedSubCats('current');
+        updateFixedSubCats('loans');
         updateVarSubCats('food');
         refreshUI();
     };
@@ -232,7 +241,7 @@
     }
 
     function setActiveBtn(e, section) {
-        if (!e) return;
+        if (!e || !e.target.classList.contains('cat-btn')) return;
         const btns = e.target.parentElement.querySelectorAll('.cat-btn');
         btns.forEach(btn => btn.classList.remove('active'));
         e.target.classList.add('active');
@@ -263,14 +272,14 @@
     }
 
     function processStorage(cat, amt, type) {
-        let records = JSON.parse(localStorage.getItem('salim_final_v1')) || [];
-        records.push({ cat, amt, type, time: new Date().toLocaleTimeString('ar-SA') });
-        localStorage.setItem('salim_final_v1', JSON.stringify(records));
+        let records = JSON.parse(localStorage.getItem('salim_final_vault')) || [];
+        records.push({ cat, amt, type, date: new Date().toLocaleDateString('ar-SA'), time: new Date().toLocaleTimeString('ar-SA') });
+        localStorage.setItem('salim_final_vault', JSON.stringify(records));
         refreshUI();
     }
 
     function refreshUI() {
-        const records = JSON.parse(localStorage.getItem('salim_final_v1')) || [];
+        const records = JSON.parse(localStorage.getItem('salim_final_vault')) || [];
         const logDiv = document.getElementById('log');
         let total = 0;
 

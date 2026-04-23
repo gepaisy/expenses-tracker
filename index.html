@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة قياس الأداء المالي </title>
+    <title>لوحة قياس الأداء المالي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -32,7 +32,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
         }
 
         h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
@@ -68,7 +68,7 @@
             padding: 8px 12px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             transition: 0.3s;
         }
@@ -110,12 +110,12 @@
 <body>
 
 <div class="container">
-    <h1><i class="fas fa-chart-line"></i> لوحة قياس الأداء المالي</h1>
+    <h1><i class="fas fa-chart-pie"></i> لوحة قياس الأداء المالي</h1>
 
     <div class="income-summary">
         <div style="display:flex; justify-content:space-between; font-size: 0.9rem;">
-            <span>إجمالي الدخل الشهري (راتب + دعم):</span>
-            <strong>21,924.87 ريال</strong>
+            <span>إجمالي الدخل الشهري الثابت:</span>
+            <strong>21,924.50 ريال</strong>
         </div>
     </div>
 
@@ -124,24 +124,15 @@
             <span><i class="fas fa-lock"></i> المصاريف الشهرية الثابتة</span>
             <span class="edit-toggle" onclick="toggleEdit('fixedAmountWrap')">تعديل المبلغ؟</span>
         </h2>
+        
+        <div class="category-buttons">
+            <div class="cat-btn active" onclick="updateFixedSubCats('current')">القروض الحالية</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('new')">القروض الجديدة</div>
+            <div class="cat-btn" onclick="updateFixedSubCats('other')">التزامات أخرى</div>
+        </div>
+
         <div class="input-group">
-            <select id="fixedCategory">
-                <optgroup label="القروض الحالية (حتى يوليو 2026)">
-                    <option value="قرض الراجحي 1" data-amt="6148">قرض الراجحي 1 (6148 ريال)</option>
-                    <option value="قرض الراجحي 2" data-amt="4562">قرض الراجحي 2 (4562 ريال)</option>
-                    <option value="قرض الراجحي 3" data-amt="54">قرض الراجحي 3 (54 ريال)</option>
-                    <option value="قرض الراجحي 4" data-amt="39">قرض الراجحي 4 (39 ريال)</option>
-                </optgroup>
-                <optgroup label="القروض الجديدة (من أغسطس 2026)">
-                    <option value="قرض الراجحي الجديد 1" data-amt="8768">قرض الراجحي الجديد 1 (8768 ريال)</option>
-                    <option value="قرض الراجحي الجديد 2" data-amt="405">قرض الراجحي الجديد 2 (405 ريال)</option>
-                    <option value="قرض الراجحي الجديد 3" data-amt="1487">قرض الراجحي الجديد 3 (1487 ريال)</option>
-                </optgroup>
-                <optgroup label="التزامات ثابتة أخرى">
-                    <option value="قرض إضافي" data-amt="1300">قرض إضافي (1300 ريال)</option>
-                    <option value="دعم العائلة" data-amt="1000">دعم العائلة (1000 ريال)</option>
-                </optgroup>
-            </select>
+            <select id="fixedCategory"></select>
         </div>
         <div class="input-group" id="fixedAmountWrap" style="display: none;">
             <input type="number" id="fixedAmount" placeholder="أدخل مبلغاً مخصصاً">
@@ -153,12 +144,12 @@
         <h2><i class="fas fa-coins"></i> المصاريف اليومية المتغيرة</h2>
         
         <div class="category-buttons">
-            <div class="cat-btn active" onclick="updateSubCats('food')">الأكل والشرب</div>
-            <div class="cat-btn" onclick="updateSubCats('home')">مصاريف البيت</div>
-            <div class="cat-btn" onclick="updateSubCats('kids')">مصاريف الأبناء</div>
-            <div class="cat-btn" onclick="updateSubCats('cars')">مصاريف السيارات</div>
-            <div class="cat-btn" onclick="updateSubCats('wife')">مصاريف الزوجة</div>
-            <div class="cat-btn" onclick="updateSubCats('personal')">مصاريف شخصية</div>
+            <div class="cat-btn active" onclick="updateVarSubCats('food')">الأكل والشرب</div>
+            <div class="cat-btn" onclick="updateVarSubCats('home')">مصاريف البيت</div>
+            <div class="cat-btn" onclick="updateVarSubCats('kids')">مصاريف الأبناء</div>
+            <div class="cat-btn" onclick="updateVarSubCats('cars')">السيارات</div>
+            <div class="cat-btn" onclick="updateVarSubCats('wife')">الزوجة</div>
+            <div class="cat-btn" onclick="updateVarSubCats('personal')">شخصية</div>
         </div>
 
         <div class="input-group">
@@ -172,7 +163,7 @@
 
     <div class="kpi-container">
         <div class="kpi-box"><span>إجمالي المصروفات</span><br><strong id="totalDisplay" style="color:var(--accent-red);">0</strong></div>
-        <div class="kpi-box"><span>المتبقي من الدخل</span><br><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
+        <div class="kpi-box"><span>المتبقي</span><br><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
     </div>
 
     <div class="history-list" id="log"></div>
@@ -182,32 +173,65 @@
 </div>
 
 <script>
-    const INCOME = 21924.87;
+    const INCOME = 21924.50;
     
-    const subCategories = {
-        food: ["مطاعم", "مقاضي سوبر ماركت", "كافيهات/حلويات", "مياه ومشروبات"],
-        home: ["أدوات منزلية", "صيانة وأعطال", "منظفات", "أخرى"],
-        kids: ["مستلزمات مدرسية", "ألعاب وهدايا", "ملابس أطفال", "نثريات الأبناء"],
-        cars: ["وقود (اكورد)", "وقود (اكسنت)", "وقود (اكسبيديشن)", "صيانة دورية", "غسيل سيارات"],
+    const fixedData = {
+        current: [
+            { name: "قرض الراجحي 1", amt: 6148 },
+            { name: "قرض الراجحي 2", amt: 4562 },
+            { name: "قرض الراجحي 3", amt: 54 },
+            { name: "قرض الراجحي 4", amt: 39 }
+        ],
+        new: [
+            { name: "قرض الراجحي الجديد 1", amt: 8768 },
+            { name: "قرض الراجحي الجديد 2", amt: 405 },
+            { name: "قرض الراجحي الجديد 3", amt: 1487 }
+        ],
+        other: [
+            { name: "قرض إضافي", amt: 1300 },
+            { name: "دعم العائلة", amt: 1000 },
+            { name: "فواتير كهرباء/ماء", amt: 600 }
+        ]
+    };
+
+    const varData = {
+        food: ["مطاعم", "سوبر ماركت", "كافيهات", "مياه"],
+        home: ["أدوات منزلية", "صيانة", "منظفات", "أخرى"],
+        kids: ["مستلزمات دراسة", "ألعاب", "ملابس أطفال", "نثريات"],
+        cars: ["وقود اكورد", "وقود اكسنت", "وقود اكسبيديشن", "صيانة/غسيل"],
         wife: ["مستلزمات خاصة", "هدايا", "مصروف دوري"],
-        personal: ["اتصالات/نت", "حلاقة/عناية", "ملابس", "صدقات/تبرعات"]
+        personal: ["اتصالات/نت", "حلاقة", "ملابس", "صدقات"]
     };
 
     window.onload = () => {
-        updateSubCats('food');
+        updateFixedSubCats('current');
+        updateVarSubCats('food');
         refreshUI();
     };
 
-    function updateSubCats(key) {
-        // تحديث حالة الأزرار
-        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+    function updateFixedSubCats(key) {
+        setActiveBtn(event, 'fixed');
+        const select = document.getElementById('fixedCategory');
+        select.innerHTML = "";
+        fixedData[key].forEach(item => {
+            select.innerHTML += `<option value="${item.name}" data-amt="${item.amt}">${item.name} (${item.amt} ريال)</option>`;
+        });
+    }
 
+    function updateVarSubCats(key) {
+        setActiveBtn(event, 'var');
         const select = document.getElementById('varSubCategory');
         select.innerHTML = "";
-        subCategories[key].forEach(item => {
+        varData[key].forEach(item => {
             select.innerHTML += `<option value="${item}">${item}</option>`;
         });
+    }
+
+    function setActiveBtn(e, section) {
+        if (!e) return;
+        const btns = e.target.parentElement.querySelectorAll('.cat-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
     }
 
     function toggleEdit(id) {
@@ -229,20 +253,20 @@
     function saveVariable() {
         const cat = document.getElementById('varSubCategory').value;
         const amt = parseFloat(document.getElementById('varAmount').value);
-        if (!amt) return;
+        if (!amt) { alert("يرجى إدخال المبلغ"); return; }
         processStorage(cat, amt, 'متغير');
         document.getElementById('varAmount').value = "";
     }
 
     function processStorage(cat, amt, type) {
-        let records = JSON.parse(localStorage.getItem('salim_expenses_pro')) || [];
-        records.push({ cat, amt, type, date: new Date().toLocaleDateString('ar-SA') });
-        localStorage.setItem('salim_expenses_pro', JSON.stringify(records));
+        let records = JSON.parse(localStorage.getItem('salim_pro_v3')) || [];
+        records.push({ cat, amt, type, timestamp: new Date().toLocaleTimeString('ar-SA') });
+        localStorage.setItem('salim_pro_v3', JSON.stringify(records));
         refreshUI();
     }
 
     function refreshUI() {
-        const records = JSON.parse(localStorage.getItem('salim_expenses_pro')) || [];
+        const records = JSON.parse(localStorage.getItem('salim_pro_v3')) || [];
         const logDiv = document.getElementById('log');
         let total = 0;
 
@@ -256,8 +280,8 @@
                 </div>`;
         });
 
-        document.getElementById('totalDisplay').innerText = total.toLocaleString() + " ريال";
-        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString() + " ريال";
+        document.getElementById('totalDisplay').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
+        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
     }
 </script>
 </body>

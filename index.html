@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة قياس الأداء المالي |</title>
+    <title>لوحة قياس الأداء المالي </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -32,7 +32,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
         }
 
         h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
@@ -54,18 +54,39 @@
 
         h2 { font-size: 1rem; color: var(--title-main); margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
 
-        .input-group { margin-bottom: 10px; text-align: right; }
-        label { font-weight: bold; font-size: 0.85rem; display: block; margin-bottom: 5px; }
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
 
+        .cat-btn {
+            background: #fff;
+            border: 1px solid var(--title-main);
+            color: var(--title-main);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .cat-btn.active {
+            background: var(--title-main);
+            color: #fff;
+        }
+
+        .input-group { margin-bottom: 10px; text-align: right; }
+        
         select, input {
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #fff; box-sizing: border-box; font-family: inherit;
         }
 
-        .edit-toggle {
-            font-size: 0.75rem; cursor: pointer; color: var(--title-main); text-decoration: underline;
-        }
+        .edit-toggle { font-size: 0.75rem; cursor: pointer; color: var(--title-main); text-decoration: underline; }
 
-        button {
+        button.main-action {
             width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-family: inherit;
         }
 
@@ -80,7 +101,7 @@
         .history-list { margin-top: 20px; border-top: 2px solid var(--brand-color); padding-top: 15px; }
         .history-item { 
             display: flex; justify-content: space-between; padding: 10px; 
-            border-bottom: 1px dashed #ccc; font-size: 0.9rem; background: #fff;
+            border-bottom: 1px dashed #ccc; font-size: 0.85rem; background: #fff;
         }
 
         .dept-info { text-align: center; margin-top: 20px; font-weight: bold; color: var(--text-dept); font-size: 0.8rem; line-height: 1.6; }
@@ -89,11 +110,11 @@
 <body>
 
 <div class="container">
-    <h1><i class="fas fa-file-invoice-dollar"></i> لوحة قياس الأداء المالي</h1>
+    <h1><i class="fas fa-chart-line"></i> لوحة قياس الأداء المالي</h1>
 
     <div class="income-summary">
-        <div style="display:flex; justify-content:space-between;">
-            <span>إجمالي الدخل الشهري:</span>
+        <div style="display:flex; justify-content:space-between; font-size: 0.9rem;">
+            <span>إجمالي الدخل الشهري (راتب + دعم):</span>
             <strong>21,924.87 ريال</strong>
         </div>
     </div>
@@ -105,52 +126,89 @@
         </h2>
         <div class="input-group">
             <select id="fixedCategory">
-                <option value="قرض الراجحي 1" data-amt="6148">قرض الراجحي 1 (6148 ريال)</option>
-                <option value="قرض الراجحي 2" data-amt="4562">قرض الراجحي 2 (4562 ريال)</option>
-                <option value="قرض الراجحي الجديد 1" data-amt="8768">قرض الراجحي الجديد 1 (8768 ريال)</option>
-                <option value="فواتير ثابتة" data-amt="500">فواتير ثابتة</option>
+                <optgroup label="القروض الحالية (حتى يوليو 2026)">
+                    <option value="قرض الراجحي 1" data-amt="6148">قرض الراجحي 1 (6148 ريال)</option>
+                    <option value="قرض الراجحي 2" data-amt="4562">قرض الراجحي 2 (4562 ريال)</option>
+                    <option value="قرض الراجحي 3" data-amt="54">قرض الراجحي 3 (54 ريال)</option>
+                    <option value="قرض الراجحي 4" data-amt="39">قرض الراجحي 4 (39 ريال)</option>
+                </optgroup>
+                <optgroup label="القروض الجديدة (من أغسطس 2026)">
+                    <option value="قرض الراجحي الجديد 1" data-amt="8768">قرض الراجحي الجديد 1 (8768 ريال)</option>
+                    <option value="قرض الراجحي الجديد 2" data-amt="405">قرض الراجحي الجديد 2 (405 ريال)</option>
+                    <option value="قرض الراجحي الجديد 3" data-amt="1487">قرض الراجحي الجديد 3 (1487 ريال)</option>
+                </optgroup>
+                <optgroup label="التزامات ثابتة أخرى">
+                    <option value="قرض إضافي" data-amt="1300">قرض إضافي (1300 ريال)</option>
+                    <option value="دعم العائلة" data-amt="1000">دعم العائلة (1000 ريال)</option>
+                </optgroup>
             </select>
         </div>
         <div class="input-group" id="fixedAmountWrap" style="display: none;">
             <input type="number" id="fixedAmount" placeholder="أدخل مبلغاً مخصصاً">
         </div>
-        <button class="btn-fixed" onclick="saveFixed()">تسجيل الالتزام</button>
+        <button class="main-action btn-fixed" onclick="saveFixed()">تسجيل الالتزام</button>
     </div>
 
     <div class="section-card">
-        <h2><i class="fas fa-shopping-cart"></i> المصاريف اليومية المتغيرة</h2>
+        <h2><i class="fas fa-coins"></i> المصاريف اليومية المتغيرة</h2>
+        
+        <div class="category-buttons">
+            <div class="cat-btn active" onclick="updateSubCats('food')">الأكل والشرب</div>
+            <div class="cat-btn" onclick="updateSubCats('home')">مصاريف البيت</div>
+            <div class="cat-btn" onclick="updateSubCats('kids')">مصاريف الأبناء</div>
+            <div class="cat-btn" onclick="updateSubCats('cars')">مصاريف السيارات</div>
+            <div class="cat-btn" onclick="updateSubCats('wife')">مصاريف الزوجة</div>
+            <div class="cat-btn" onclick="updateSubCats('personal')">مصاريف شخصية</div>
+        </div>
+
         <div class="input-group">
-            <select id="varCategory">
-                <option value="الأكل والشرب">الأكل والشرب</option>
-                <option value="وقود السيارة">وقود السيارة</option>
-                <option value="مقاضي المنزل">مقاضي المنزل</option>
-                <option value="نثريات">نثريات</option>
-            </select>
+            <select id="varSubCategory"></select>
         </div>
         <div class="input-group">
-            <input type="number" id="varAmount" placeholder="المبلغ">
+            <input type="number" id="varAmount" placeholder="المبلغ المصروف">
         </div>
-        <button class="btn-var" onclick="saveVariable()">تسجيل المصروف</button>
+        <button class="main-action btn-var" onclick="saveVariable()">تسجيل المصروف</button>
     </div>
 
     <div class="kpi-container">
         <div class="kpi-box"><span>إجمالي المصروفات</span><br><strong id="totalDisplay" style="color:var(--accent-red);">0</strong></div>
-        <div class="kpi-box"><span>المبلغ المتبقي</span><br><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
+        <div class="kpi-box"><span>المتبقي من الدخل</span><br><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
     </div>
 
-    <div class="history-list" id="log">
-        <strong>سجل العمليات:</strong>
-    </div>
+    <div class="history-list" id="log"></div>
 
     <div class="dept-info">
-      
     </div>
 </div>
 
 <script>
     const INCOME = 21924.87;
+    
+    const subCategories = {
+        food: ["مطاعم", "مقاضي سوبر ماركت", "كافيهات/حلويات", "مياه ومشروبات"],
+        home: ["أدوات منزلية", "صيانة وأعطال", "منظفات", "أخرى"],
+        kids: ["مستلزمات مدرسية", "ألعاب وهدايا", "ملابس أطفال", "نثريات الأبناء"],
+        cars: ["وقود (اكورد)", "وقود (اكسنت)", "وقود (اكسبيديشن)", "صيانة دورية", "غسيل سيارات"],
+        wife: ["مستلزمات خاصة", "هدايا", "مصروف دوري"],
+        personal: ["اتصالات/نت", "حلاقة/عناية", "ملابس", "صدقات/تبرعات"]
+    };
 
-    window.onload = refreshUI;
+    window.onload = () => {
+        updateSubCats('food');
+        refreshUI();
+    };
+
+    function updateSubCats(key) {
+        // تحديث حالة الأزرار
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const select = document.getElementById('varSubCategory');
+        select.innerHTML = "";
+        subCategories[key].forEach(item => {
+            select.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
 
     function toggleEdit(id) {
         const el = document.getElementById(id);
@@ -161,8 +219,6 @@
         const select = document.getElementById('fixedCategory');
         const cat = select.value;
         const manualAmt = document.getElementById('fixedAmount').value;
-        
-        // إذا كان هناك مبلغ يدوي نستخدمه، وإلا نستخدم المبلغ المخزن في الـ data-amt
         const amt = manualAmt ? parseFloat(manualAmt) : parseFloat(select.options[select.selectedIndex].getAttribute('data-amt'));
         
         processStorage(cat, amt, 'ثابت');
@@ -171,41 +227,37 @@
     }
 
     function saveVariable() {
-        const cat = document.getElementById('varCategory').value;
+        const cat = document.getElementById('varSubCategory').value;
         const amt = parseFloat(document.getElementById('varAmount').value);
-        
-        if (!amt) { alert("يرجى إدخال المبلغ"); return; }
-        
+        if (!amt) return;
         processStorage(cat, amt, 'متغير');
         document.getElementById('varAmount').value = "";
     }
 
     function processStorage(cat, amt, type) {
-        let records = JSON.parse(localStorage.getItem('salim_vault_v2')) || [];
-        records.push({ cat, amt, type, timestamp: new Date().getTime() });
-        localStorage.setItem('salim_vault_v2', JSON.stringify(records));
+        let records = JSON.parse(localStorage.getItem('salim_expenses_pro')) || [];
+        records.push({ cat, amt, type, date: new Date().toLocaleDateString('ar-SA') });
+        localStorage.setItem('salim_expenses_pro', JSON.stringify(records));
         refreshUI();
     }
 
     function refreshUI() {
-        const records = JSON.parse(localStorage.getItem('salim_vault_v2')) || [];
+        const records = JSON.parse(localStorage.getItem('salim_expenses_pro')) || [];
         const logDiv = document.getElementById('log');
         let total = 0;
 
         logDiv.innerHTML = "<strong>سجل العمليات:</strong>";
-        
-        // عرض العمليات من الأحدث للأقدم
         records.slice().reverse().forEach(item => {
             total += item.amt;
             logDiv.innerHTML += `
                 <div class="history-item">
-                    <span>${item.cat} <small style="color:#888">(${item.type})</small></span>
+                    <span>${item.cat} <small>(${item.type})</small></span>
                     <strong>${item.amt.toLocaleString(undefined, {minimumFractionDigits: 2})} ريال</strong>
                 </div>`;
         });
 
-        document.getElementById('totalDisplay').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
-        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
+        document.getElementById('totalDisplay').innerText = total.toLocaleString() + " ريال";
+        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString() + " ريال";
     }
 </script>
 </body>

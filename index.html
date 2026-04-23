@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الأداء المالي | سالم الفاهمي</title>
+    <title>لوحة قياس الأداء المالي|</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-blue: #e3f2fd;
-            --accent-blue: #1976d2;
-            --accent-green: #2e7d32;
-            --accent-orange: #ef6c00;
+            --bg-page: #c2c1c1;
+            --brand-color: #69cee3;
+            --title-main: #351375;
+            --text-normal: #15445a;
+            --text-dept: #218caa;
             --accent-red: #d32f2f;
-            --text-main: #37474f;
+            --accent-green: #2e7d32;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-blue), #f1f8e9);
-            min-height: 100vh;
+            font-family: "Helvetica Neue W23 for SKY", Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-normal);
             margin: 0;
             display: flex;
             justify-content: center;
@@ -26,182 +27,157 @@
         }
 
         .container {
-            background: white;
+            background: #ffffff;
             padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 550px;
         }
 
-        h1 { color: var(--accent-blue); text-align: center; font-size: 1.5rem; margin-bottom: 5px; }
-        .update-time { text-align: center; color: #777; font-size: 0.8rem; margin-bottom: 20px; }
+        h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; }
 
         .income-summary {
             background: #f1f8ff;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            border: 1px solid var(--primary-blue);
+            border: 1px solid var(--brand-color);
         }
-
-        .income-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
-        .total-income { border-top: 1px solid #ccc; padding-top: 5px; font-weight: bold; color: var(--accent-blue); }
 
         .section-card {
-            background: #fff;
+            background-color: var(--brand-color);
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 15px;
-            border: 1px solid #eee;
         }
 
-        h2 { font-size: 0.9rem; color: var(--accent-blue); margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 15px; }
+        h2 { font-size: 1rem; color: var(--title-main); margin-top: 0; }
 
-        .input-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
-        
+        .input-group { margin-bottom: 10px; text-align: right; }
+        label { font-weight: bold; font-size: 0.85rem; display: block; margin-bottom: 5px; }
+
         select, input {
-            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 0.9rem;
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #fff; box-sizing: border-box;
         }
 
         button {
-            width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white;
+            width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s;
         }
 
-        .btn-fixed { background-color: var(--accent-orange); }
-        .btn-var { background-color: var(--accent-blue); }
+        .btn-fixed { background-color: #ef6c00; }
+        .btn-var { background-color: var(--title-main); }
 
         .kpi-container {
             margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
         }
-        .kpi-box { padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #eee; }
-        .kpi-box span { display: block; font-size: 0.75rem; color: #666; }
-        .kpi-box strong { font-size: 1rem; }
+        .kpi-box { padding: 12px; border-radius: 10px; text-align: center; background: #f9f9f9; border: 1px solid #eee; }
 
-        .progress-container { width: 100%; background-color: #eee; border-radius: 10px; margin: 15px 0; height: 8px; }
-        .progress-bar { height: 100%; background-color: var(--accent-green); border-radius: 10px; width: 0%; transition: 0.5s; }
+        .history-list { margin-top: 20px; border-top: 2px solid var(--brand-color); padding-top: 15px; }
+        .history-item { 
+            display: flex; justify-content: space-between; padding: 8px; 
+            border-bottom: 1px dashed #ccc; font-size: 0.9rem; 
+        }
 
-        .history-list { margin-top: 15px; max-height: 150px; overflow-y: auto; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 10px; }
-        .history-item { display: flex; justify-content: space-between; padding: 6px; border-bottom: 1px dashed #eee; }
-
-        .dept-info { text-align: center; margin-top: 25px; font-weight: bold; color: var(--accent-blue); font-size: 0.85rem; }
+        .dept-info { text-align: center; margin-top: 20px; font-weight: bold; color: var(--text-dept); font-size: 0.8rem; line-height: 1.6; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1><i class="fas fa-file-invoice-dollar"></i> لوحة قياس الأداء المالي</h1>
-    <p class="update-time">سالم الفاهمي (أبو محمد) - تحديث 11:50 مساءً</p>
 
     <div class="income-summary">
-        <div class="income-row"><span>الراتب الأساسي:</span> <span>20,737.50 ريال</span></div>
-        <div class="income-row"><span>الدعم السكني:</span> <span>1,187.37 ريال</span></div>
-        <div class="income-row total-income"><span>إجمالي الدخل الشهري:</span> <strong>21,924.87 ريال</strong></div>
+        <div style="display:flex; justify-content:space-between;">
+            <span>إجمالي الدخل الشهري:</span>
+            <strong>21,924.87 ريال</strong>
+        </div>
     </div>
 
-    <div class="section-card" style="border-right: 5px solid var(--accent-orange);">
-        <h2><i class="fas fa-lock"></i> المصاريف الشهرية الثابتة (الالتزامات)</h2>
+    <div class="section-card">
+        <h2><i class="fas fa-lock"></i> المصاريف الشهرية الثابتة</h2>
         <div class="input-group">
             <select id="fixedCategory">
-                <optgroup label="القروض الحالية (الراجحي)">
-                    <option value="قرض الراجحي 1">قرض الراجحي 1 (6148 ريال)</option>
-                    <option value="قرض الراجحي 2">قرض الراجحي 2 (4562 ريال)</option>
-                    <option value="قرض الراجحي 3">قرض الراجحي 3 (54 ريال)</option>
-                    <option value="قرض الراجحي 4">قرض الراجحي 4 (39 ريال)</option>
-                </optgroup>
-                <optgroup label="القروض الجديدة">
-                    <option value="قرض الراجحي الجديد 1">قرض الراجحي الجديد 1 (8768 ريال)</option>
-                    <option value="قرض الراجحي الجديد 2">قرض الراجحي الجديد 2 (405 ريال)</option>
-                    <option value="قرض الراجحي الجديد 3">قرض الراجحي الجديد 3 (1487 ريال)</option>
-                </optgroup>
-                <optgroup label="التزامات أخرى">
-                    <option value="قرض إضافي">قرض إضافي</option>
-                    <option value="فواتير وخدمات">فواتير وخدمات ثابتة</option>
-                </optgroup>
+                <option value="قرض الراجحي 1">قرض الراجحي 1 (6148 ريال)</option>
+                <option value="قرض الراجحي 2">قرض الراجحي 2 (4562 ريال)</option>
+                <option value="قرض الراجحي الجديد 1">قرض الراجحي الجديد 1 (8768 ريال)</option>
+                <option value="فواتير ثابتة">فواتير ثابتة</option>
             </select>
         </div>
         <div class="input-group">
-            <input type="number" id="fixedAmount" placeholder="أدخل المبلغ المسجل في الإكسيل">
+            <input type="number" id="fixedAmount" placeholder="المبلغ">
         </div>
-        <button class="btn-fixed" onclick="addExpense('fixedCategory', 'fixedAmount', 'ثابت')">تسجيل الالتزام</button>
+        <button class="btn-fixed" onclick="saveRecord('fixedCategory', 'fixedAmount', 'ثابت')">تسجيل الالتزام</button>
     </div>
 
-    <div class="section-card" style="border-right: 5px solid var(--accent-blue);">
+    <div class="section-card">
         <h2><i class="fas fa-shopping-cart"></i> المصاريف اليومية المتغيرة</h2>
         <div class="input-group">
             <select id="varCategory">
                 <option value="الأكل والشرب">الأكل والشرب</option>
                 <option value="وقود السيارة">وقود السيارة</option>
-                <option value="سوبر ماركت">سوبر ماركت / مقاضي</option>
-                <option value="ترفيه ونثريات">ترفيه ونثريات</option>
-                <option value="مصاريف عائلية">مصاريف عائلية متغيرة</option>
+                <option value="مقاضي المنزل">مقاضي المنزل</option>
+                <option value="نثريات">نثريات</option>
             </select>
         </div>
         <div class="input-group">
-            <input type="number" id="varAmount" placeholder="المبلغ المصروف">
+            <input type="number" id="varAmount" placeholder="المبلغ">
         </div>
-        <button class="btn-var" onclick="addExpense('varCategory', 'varAmount', 'متغير')">تسجيل المصروف</button>
+        <button class="btn-var" onclick="saveRecord('varCategory', 'varAmount', 'متغير')">تسجيل المصروف</button>
     </div>
 
     <div class="kpi-container">
-        <div class="kpi-box">
-            <span>إجمالي المصروفات</span>
-            <strong id="totalExp" style="color: var(--accent-red);">0 ريال</strong>
-        </div>
-        <div class="kpi-box">
-            <span>المتبقي من الدخل</span>
-            <strong id="remaining" style="color: var(--accent-green);">0 ريال</strong>
-        </div>
+        <div class="kpi-box"><span>المصروفات</span><strong id="totalDisplay" style="color:var(--accent-red);">0</strong></div>
+        <div class="kpi-box"><span>المتبقي</span><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
     </div>
 
-    <div class="progress-container">
-        <div id="pBar" class="progress-bar"></div>
+    <div class="history-list" id="log">
+        <strong>سجل العمليات:</strong>
     </div>
 
-    <div class="history-list" id="history"></div>
-
-    <div class="dept-info">إعداد / قسم قياس الأداء المؤسسي</div>
+    <div class="dept-info">
+      
+    </div>
 </div>
 
 <script>
-    const TOTAL_INCOME = 21924.87;
+    const INCOME = 21924.87;
 
-    window.onload = displayDashboard;
+    window.onload = refreshUI;
 
-    function addExpense(catId, amtId, type) {
+    function saveRecord(catId, amtId, type) {
         const cat = document.getElementById(catId).value;
         const amt = parseFloat(document.getElementById(amtId).value);
-        if (!amt) return;
+        
+        if (!amt) { alert("يرجى إدخال المبلغ"); return; }
 
-        let data = JSON.parse(localStorage.getItem('salim_financial_tracker')) || [];
-        data.push({ cat, amt, date: new Date().toLocaleDateString('ar-SA'), type });
-        localStorage.setItem('salim_financial_tracker', JSON.stringify(data));
+        let records = JSON.parse(localStorage.getItem('salim_vault')) || [];
+        records.push({ cat, amt, type, date: new Date().toLocaleDateString('ar-SA') });
+        localStorage.setItem('salim_vault', JSON.stringify(records));
 
         document.getElementById(amtId).value = "";
-        displayDashboard();
+        refreshUI(); // تحديث العرض فوراً
     }
 
-    function displayDashboard() {
-        let data = JSON.parse(localStorage.getItem('salim_financial_tracker')) || [];
-        const hist = document.getElementById('history');
+    function refreshUI() {
+        const records = JSON.parse(localStorage.getItem('salim_vault')) || [];
+        const logDiv = document.getElementById('log');
         let total = 0;
+
+        logDiv.innerHTML = "<strong>سجل العمليات:</strong>";
         
-        hist.innerHTML = "<strong>سجل العمليات اليومي:</strong>";
-        data.slice().reverse().forEach((x, index) => {
-            total += x.amt;
-            if(index < 10) { // إظهار آخر 10 عمليات فقط
-                hist.innerHTML += `<div class="history-item"><span>${x.cat} (${x.type})</span><strong>${x.amt.toLocaleString()} ريال</strong></div>`;
-            }
+        records.slice().reverse().forEach(item => {
+            total += item.amt;
+            logDiv.innerHTML += `
+                <div class="history-item">
+                    <span>${item.cat} (${item.type})</span>
+                    <strong>${item.amt.toLocaleString()} ريال</strong>
+                </div>`;
         });
 
-        const remain = TOTAL_INCOME - total;
-        const percent = (total / TOTAL_INCOME) * 100;
-
-        document.getElementById('totalExp').innerText = total.toLocaleString() + " ريال";
-        document.getElementById('remaining').innerText = remain.toLocaleString() + " ريال";
-        document.getElementById('pBar').style.width = Math.min(percent, 100) + "%";
-        
-        // تغيير لون الشريط بناءً على الأداء المالي
-        if(percent > 90) document.getElementById('pBar').style.backgroundColor = "var(--accent-red)";
-        else if(percent >
+        document.getElementById('totalDisplay').innerText = total.toLocaleString() + " ريال";
+        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString() + " ريال";
+    }
+</script>
+</body>
+</html>

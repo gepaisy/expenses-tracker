@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة قياس الأداء المالي|</title>
+    <title>لوحة قياس الأداء المالي |</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -35,7 +35,7 @@
             max-width: 550px;
         }
 
-        h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; }
+        h1 { color: var(--title-main); text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
 
         .income-summary {
             background: #f1f8ff;
@@ -52,17 +52,21 @@
             margin-bottom: 15px;
         }
 
-        h2 { font-size: 1rem; color: var(--title-main); margin-top: 0; }
+        h2 { font-size: 1rem; color: var(--title-main); margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
 
         .input-group { margin-bottom: 10px; text-align: right; }
         label { font-weight: bold; font-size: 0.85rem; display: block; margin-bottom: 5px; }
 
         select, input {
-            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #fff; box-sizing: border-box;
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #fff; box-sizing: border-box; font-family: inherit;
+        }
+
+        .edit-toggle {
+            font-size: 0.75rem; cursor: pointer; color: var(--title-main); text-decoration: underline;
         }
 
         button {
-            width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s;
+            width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; font-family: inherit;
         }
 
         .btn-fixed { background-color: #ef6c00; }
@@ -75,8 +79,8 @@
 
         .history-list { margin-top: 20px; border-top: 2px solid var(--brand-color); padding-top: 15px; }
         .history-item { 
-            display: flex; justify-content: space-between; padding: 8px; 
-            border-bottom: 1px dashed #ccc; font-size: 0.9rem; 
+            display: flex; justify-content: space-between; padding: 10px; 
+            border-bottom: 1px dashed #ccc; font-size: 0.9rem; background: #fff;
         }
 
         .dept-info { text-align: center; margin-top: 20px; font-weight: bold; color: var(--text-dept); font-size: 0.8rem; line-height: 1.6; }
@@ -95,19 +99,22 @@
     </div>
 
     <div class="section-card">
-        <h2><i class="fas fa-lock"></i> المصاريف الشهرية الثابتة</h2>
+        <h2>
+            <span><i class="fas fa-lock"></i> المصاريف الشهرية الثابتة</span>
+            <span class="edit-toggle" onclick="toggleEdit('fixedAmountWrap')">تعديل المبلغ؟</span>
+        </h2>
         <div class="input-group">
             <select id="fixedCategory">
-                <option value="قرض الراجحي 1">قرض الراجحي 1 (6148 ريال)</option>
-                <option value="قرض الراجحي 2">قرض الراجحي 2 (4562 ريال)</option>
-                <option value="قرض الراجحي الجديد 1">قرض الراجحي الجديد 1 (8768 ريال)</option>
-                <option value="فواتير ثابتة">فواتير ثابتة</option>
+                <option value="قرض الراجحي 1" data-amt="6148">قرض الراجحي 1 (6148 ريال)</option>
+                <option value="قرض الراجحي 2" data-amt="4562">قرض الراجحي 2 (4562 ريال)</option>
+                <option value="قرض الراجحي الجديد 1" data-amt="8768">قرض الراجحي الجديد 1 (8768 ريال)</option>
+                <option value="فواتير ثابتة" data-amt="500">فواتير ثابتة</option>
             </select>
         </div>
-        <div class="input-group">
-            <input type="number" id="fixedAmount" placeholder="المبلغ">
+        <div class="input-group" id="fixedAmountWrap" style="display: none;">
+            <input type="number" id="fixedAmount" placeholder="أدخل مبلغاً مخصصاً">
         </div>
-        <button class="btn-fixed" onclick="saveRecord('fixedCategory', 'fixedAmount', 'ثابت')">تسجيل الالتزام</button>
+        <button class="btn-fixed" onclick="saveFixed()">تسجيل الالتزام</button>
     </div>
 
     <div class="section-card">
@@ -123,12 +130,12 @@
         <div class="input-group">
             <input type="number" id="varAmount" placeholder="المبلغ">
         </div>
-        <button class="btn-var" onclick="saveRecord('varCategory', 'varAmount', 'متغير')">تسجيل المصروف</button>
+        <button class="btn-var" onclick="saveVariable()">تسجيل المصروف</button>
     </div>
 
     <div class="kpi-container">
-        <div class="kpi-box"><span>المصروفات</span><strong id="totalDisplay" style="color:var(--accent-red);">0</strong></div>
-        <div class="kpi-box"><span>المتبقي</span><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
+        <div class="kpi-box"><span>إجمالي المصروفات</span><br><strong id="totalDisplay" style="color:var(--accent-red);">0</strong></div>
+        <div class="kpi-box"><span>المبلغ المتبقي</span><br><strong id="remainDisplay" style="color:var(--accent-green);">0</strong></div>
     </div>
 
     <div class="history-list" id="log">
@@ -145,38 +152,60 @@
 
     window.onload = refreshUI;
 
-    function saveRecord(catId, amtId, type) {
-        const cat = document.getElementById(catId).value;
-        const amt = parseFloat(document.getElementById(amtId).value);
+    function toggleEdit(id) {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function saveFixed() {
+        const select = document.getElementById('fixedCategory');
+        const cat = select.value;
+        const manualAmt = document.getElementById('fixedAmount').value;
+        
+        // إذا كان هناك مبلغ يدوي نستخدمه، وإلا نستخدم المبلغ المخزن في الـ data-amt
+        const amt = manualAmt ? parseFloat(manualAmt) : parseFloat(select.options[select.selectedIndex].getAttribute('data-amt'));
+        
+        processStorage(cat, amt, 'ثابت');
+        document.getElementById('fixedAmount').value = "";
+        document.getElementById('fixedAmountWrap').style.display = 'none';
+    }
+
+    function saveVariable() {
+        const cat = document.getElementById('varCategory').value;
+        const amt = parseFloat(document.getElementById('varAmount').value);
         
         if (!amt) { alert("يرجى إدخال المبلغ"); return; }
+        
+        processStorage(cat, amt, 'متغير');
+        document.getElementById('varAmount').value = "";
+    }
 
-        let records = JSON.parse(localStorage.getItem('salim_vault')) || [];
-        records.push({ cat, amt, type, date: new Date().toLocaleDateString('ar-SA') });
-        localStorage.setItem('salim_vault', JSON.stringify(records));
-
-        document.getElementById(amtId).value = "";
-        refreshUI(); // تحديث العرض فوراً
+    function processStorage(cat, amt, type) {
+        let records = JSON.parse(localStorage.getItem('salim_vault_v2')) || [];
+        records.push({ cat, amt, type, timestamp: new Date().getTime() });
+        localStorage.setItem('salim_vault_v2', JSON.stringify(records));
+        refreshUI();
     }
 
     function refreshUI() {
-        const records = JSON.parse(localStorage.getItem('salim_vault')) || [];
+        const records = JSON.parse(localStorage.getItem('salim_vault_v2')) || [];
         const logDiv = document.getElementById('log');
         let total = 0;
 
         logDiv.innerHTML = "<strong>سجل العمليات:</strong>";
         
+        // عرض العمليات من الأحدث للأقدم
         records.slice().reverse().forEach(item => {
             total += item.amt;
             logDiv.innerHTML += `
                 <div class="history-item">
-                    <span>${item.cat} (${item.type})</span>
-                    <strong>${item.amt.toLocaleString()} ريال</strong>
+                    <span>${item.cat} <small style="color:#888">(${item.type})</small></span>
+                    <strong>${item.amt.toLocaleString(undefined, {minimumFractionDigits: 2})} ريال</strong>
                 </div>`;
         });
 
-        document.getElementById('totalDisplay').innerText = total.toLocaleString() + " ريال";
-        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString() + " ريال";
+        document.getElementById('totalDisplay').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
+        document.getElementById('remainDisplay').innerText = (INCOME - total).toLocaleString(undefined, {minimumFractionDigits: 2}) + " ريال";
     }
 </script>
 </body>
